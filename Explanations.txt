@@ -1,0 +1,39 @@
+Sobel operator:
+
+- Smaller numbers denote edges that are not really sharp, while larger numbers denote sharper edges.
+
+- Essentially a kernel convolution, where one side of the kernel is positive and the other is negative.
+
+- Once you slide over a sobel-y operator and a sobel-x operator, you get two images, representing how strong an edge is in the x direction and the y direction. What you need is the total of those things.
+
+- What you now do is add the two edge values for each location using the Pythagorean theorem. Because you are squaring the values, you will get rid of the negatives, and places where both edges are really large, the resulting edge will also be really large.
+
+- You can also easiliy get the orientation of the edges by using ArcTan.
+
+- The Sobel is a grayscale operator.
+
+- It is very sensitive and noisy because you are using a small kernel.
+
+- It is also very common to do a Gaussian blur before you apply a Sobel.
+
+
+Canny Edge Detection:
+
+- Canny works by taking the image from the Sobel output, thinning all the edges so they are 1 pixel wide.
+
+- After that it uses a process called hysteresis thresholding, which is two level.
+
+- First we find the orientation of the image, then for every pixel we try to find out whether it is a local maximum, that means that it's bigger than it's neighbours. It's only measured against the pixels that are not running along the edge, ie. across the edge. This thins down the edges.
+
+- We apply hysteresis thresholding to get rid of edges that are not strong enough. There are two parameters, the top and the bottom. Anything above the top is automatically kept, and anything below the bottom is automatically discarded. The edges in between are checked to see whether they are connected to the existing edges.
+
+
+Hough Transform:
+
+- It's more common to think of a line in rectangle coordinates, i.e. y = mx + b. As the Wikipedia article states, a line can also be expressed in polar form. The Hough transform exploits this change of representation (for lines, anyway. The discussion can also be applied to circles, ellipses, etc.).
+
+- The first step in the Hough transform is to reduce the image to a set of edges. The Canny edge-detector is a frequent choice. The resulting edge image serves as the input to the Hough process.
+
+- To summarize, pixels "lit" in the edge image are converted to polar form, i.e. their position is represented using a direction theta and a distance r - instead of x and y. (The center of the image is commonly used as the reference point for this change of coordinates.)
+
+- The Hough transform is essentially a histogram. Edge pixels mapping to the same theta and r are assumed to define a line in the image. To compute the frequency of occurrence, theta and r are discretized (partitioned into a number of bins). Once all edge pixels have been converted to polar form, the bins are analyzed to determine the lines in the original image.
